@@ -1,3 +1,4 @@
+import os
 from threading import Thread
 from flask import Flask
 from flask_mail import Message, Mail
@@ -11,23 +12,23 @@ f_app = Flask('email')
 
 f_app.config.update(
     # 邮箱基础配置
-    MAIL_SERVER = "smtp.qq.com",
-    MAIL_PORT = 465,
-    MAIL_USE_SSL = True,
-    MAIL_USERNAME = '2809276444@qq.com',
-    MAIL_PASSWORD = 'udfumdkgeqledeja',      #邮箱授码
-    MAIL_DEFAULT_SENDER = '2809276444@qq.com',
+    MAIL_SERVER="smtp.qq.com",
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME=os.getenv("QQEMAIL"),
+    MAIL_PASSWORD=os.getenv("QQEMAILALLOWEDPWD"),  # 邮箱授权码
+    MAIL_DEFAULT_SENDER=os.getenv("QQEMAIL"),
 )
 
 email = Mail(f_app)
 
+
 # send email asynchronously
-#注意，由于主线程中没有对flask_main插件的Mail对象进行实例化和初始化，所以Message依赖的属性没有初始化，所以无法在主线程中进行实例化
-#解决方法：
+# 注意，由于主线程中没有对flask_main插件的Mail对象进行实例化和初始化，所以Message依赖的属性没有初始化，所以无法在主线程中进行实例化
+# 解决方法：
 #   子线程对Mail进行了实例化和初始化，所以Message在子线程中实例化
 
 def _send_async_mail(app, mess):
-
     with app.app_context():
         message = Message(mess['subject'])
         if isinstance(mess['to'], list):
@@ -44,9 +45,7 @@ def _send_async_mail(app, mess):
         email.send(message)
 
 
-
-def send_async_mail(subject, to,body=None,html=None):
-
+def send_async_mail(subject, to, body=None, html=None):
     '''
     通过线程实现异步调用发送email
     :param subject: 主题
@@ -57,10 +56,10 @@ def send_async_mail(subject, to,body=None,html=None):
     '''
 
     message = {
-        'subject':subject,
-        'to':to,
-        'body':body,
-        'html':html,
+        'subject': subject,
+        'to': to,
+        'body': body,
+        'html': html,
     }
 
     # 通过线程实现异步调用
@@ -68,4 +67,3 @@ def send_async_mail(subject, to,body=None,html=None):
     thr.start()
 
     return thr
-
