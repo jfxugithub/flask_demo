@@ -1,4 +1,5 @@
 from app.views.mail_view import blue as mail_bp
+from app.views.upload import bp as upload_bp
 
 '''
     该模块不能被试图模块调用，否则会出现循环调用的问题
@@ -13,5 +14,6 @@ def init_views(app):
     :return:None
     '''
     app.register_blueprint(blueprint=mail_bp)
+    app.register_blueprint(blueprint=upload_bp)
 
     return None
