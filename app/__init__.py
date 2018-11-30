@@ -1,9 +1,11 @@
+import os
+
 from flask import Flask
 
 from app import settings
 from app.ext import init_ext
 from app.views import init_views
-
+from log.basic_log import init_logging
 
 """
     此模块只给manager调用，其它模块不能调用，不然会出现循环调用
@@ -16,6 +18,9 @@ def create_app(config='default'):
     :param config:选择开发环境，测试环境和线上环境
     :return:flask app
     '''
+
+    #日志初始化
+    init_logging(os.path.join(settings.BASEDIR, "log/log_config.yaml"))
 
     app = Flask('demo',static_folder=settings.STATICPATH,template_folder=settings.TEMPLATESPATH)
 
