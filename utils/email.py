@@ -67,3 +67,14 @@ def send_async_mail(subject, to, body=None, html=None):
     thr.start()
 
     return thr
+
+def send_mail(subject, to, body=None, html=None):
+
+    message = {
+        'subject': subject,
+        'to': to,
+        'body': body,
+        'html': html,
+    }
+
+    _send_async_mail(f_app,message)

@@ -1,4 +1,5 @@
 from app.views.mail_view import blue as mail_bp
+from app.views.celery_view import blue as celery_bp
 from app.views.upload import bp as upload_bp
 
 '''
@@ -15,5 +16,5 @@ def init_views(app):
     '''
     app.register_blueprint(blueprint=mail_bp)
     app.register_blueprint(blueprint=upload_bp)
-
+    app.register_blueprint(blueprint=celery_bp)
     return None
